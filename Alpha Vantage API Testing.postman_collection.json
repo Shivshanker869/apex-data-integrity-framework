@@ -1,0 +1,105 @@
+{
+	"info": {
+		"_postman_id": "228d5b63-a455-4417-a4a7-4a1a9ee27002",
+		"name": "Alpha Vantage API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44940297"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set dynamic date if needed\r",
+							"const currentDate = new Date().toISOString().split('T')[0];\r",
+							"pm.variables.set(\"today\", currentDate);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check response time\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"// Validate JSON structure\r",
+							"pm.test(\"Response has valid JSON\", function () {\r",
+							"    pm.response.to.have.jsonBody();\r",
+							"});\r",
+							"\r",
+							"// Check for error message\r",
+							"pm.test(\"No error in response\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.not.have.property(\"Error Message\");\r",
+							"});\r",
+							"\r",
+							"// Validate specific data points\r",
+							"pm.test(\"Contains expected metadata\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData[\"Meta Data\"]).to.exist;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "javascript"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"query"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "TIME_SERIES_INTRADAY"
+						},
+						{
+							"key": "symbol",
+							"value": "IBM"
+						},
+						{
+							"key": "interval",
+							"value": "5min"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
